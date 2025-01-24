@@ -1,7 +1,8 @@
 from pathlib import Path
 import logging
-from typing import List, Any
+from typing import List
 
+from dj_inspector.checkers.admin_checker import AdminURLChecker
 from dj_inspector.checkers.setting_checker import SettingsChecker
 from dj_inspector.utils.constants import COLORS, MESSAGES, Severity, SecurityCheckResult
 import time
@@ -24,7 +25,8 @@ class DjangoSecurityInspector:
         setting_check = SettingsChecker(
             project_path=self.project_path, settings_module=self.settings_module
         )
-        self.checkers.append(setting_check)
+        admin_url_check = AdminURLChecker(project_path=self.project_path)
+        self.checkers.extend([setting_check, admin_url_check])
 
     def _display_results(self) -> None:
         """Display security check results grouped by severity."""

@@ -2,6 +2,7 @@ import ast
 import logging
 from typing import Any, List, Tuple
 from pathlib import Path
+from dj_inspector.checkers.security_checker import SecurityChecker
 from dj_inspector.utils.constants import (
     SECURITY_CHECKS,
     SecurityCheckResult,
@@ -11,7 +12,7 @@ from dj_inspector.utils.constants import (
 logger = logging.getLogger(__name__)
 
 
-class SettingsChecker:
+class SettingsChecker(SecurityChecker):
     def __init__(self, project_path: Path, settings_module: str):
         self.project_path = project_path
         self.settings_module = settings_module
@@ -34,7 +35,6 @@ class SettingsChecker:
             if isinstance(node, ast.Assign):
                 for target in node.targets:
                     if isinstance(target, ast.Name) and target.id == setting_name:
-
                         if isinstance(node.value, ast.Call):
                             call = node.value
                             if (
@@ -45,7 +45,6 @@ class SettingsChecker:
                                 and isinstance(call.func.value, ast.Name)
                                 and call.func.value.id == "env"
                             ):
-
                                 if len(call.args) > 1:
                                     default_value = call.args[1]
                                     if isinstance(default_value, ast.Constant):

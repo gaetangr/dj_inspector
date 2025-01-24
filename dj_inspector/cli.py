@@ -5,6 +5,7 @@ from dj_inspector.core.inspector import DjangoSecurityInspector
 
 console = Console()
 
+
 @click.command()
 @click.argument("project_path", type=click.Path(exists=True, path_type=Path))
 @click.argument("settings_module", type=str)
@@ -20,6 +21,7 @@ def main(project_path: Path, settings_module: str) -> None:
         inspector.run()
     except Exception as e:
         console.print(f"Error: {e}", style="bold red")
+
 
 if __name__ == "__main__":
     main()
